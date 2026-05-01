@@ -104,3 +104,25 @@ def plot_3d_projections(data_list,
                         arrow=arrows,
                         arrow_size=arrow_size,
                         circle_size=circle_size)
+
+
+def bins_for_window(center_bin, window_len_bins, n_times):
+    """which time-bin indices fall inside this window (never outside 0 … T-1)."""
+    half = window_len_bins // 2
+    lo = max(0, center_bin - half)
+    hi_excl = min(n_times, center_bin + half + 1)
+    return np.arange(lo, hi_excl)
+
+
+def stack_XY_in_window(data_list, bins):
+    bins = np.asarray(bins, dtype=int)
+    X_parts, Xdot_parts = [], []
+    for x in data_list:
+        T = x.shape[0]
+        ok = (bins >= 0) & (bins < T - 1)
+        r = bins[ok]
+        if r.size == 0:
+            continue
+        X_parts.append(x[r])
+        Xdot_parts.append(x[r + 1] - x[r])
+    return np.concatenate(X_parts, axis=0), np.concatenate(Xdot_parts, axis=0)
