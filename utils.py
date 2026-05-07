@@ -217,6 +217,7 @@ def diagnose_skew_trajectory(
     secondary_series_label="skew_sym_regress",
     primary_series_label="skew_sym_regress",
     plot_real_part=False,
+    save_name=None,
 ):
     """Spectra + R2 vs window center; optional second trajectory (e.g. skew_sym_regress).
 
@@ -596,6 +597,8 @@ def diagnose_skew_trajectory(
     ax_r2.set_xlim(-50, 550)
 
     plt.tight_layout()
+    if save_name is not None:
+        plt.savefig("images/" + save_name)
     plt.show()
 
 def fit_affine_ridge(X, Xdot, lam=1e-2, penalize_bias=False):
